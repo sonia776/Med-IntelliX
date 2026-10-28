@@ -26,8 +26,8 @@
 ### 1. Installation
 Clone the repository and install dependencies:
 ```bash
-git clone https://github.com/simranoble04-bloom/MedIntelliX.git
-cd MedIntelliX/backend
+git clone https://github.com/sonia776/Med-IntelliX.git
+cd Med-IntelliX/backend
 npm install
 ```
 

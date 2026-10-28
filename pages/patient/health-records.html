@@ -1,0 +1,770 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="View and organize your medical history in the MedIntelliX patient portal.">
+
+    <title>Health Records | MedIntelliX</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/patient.css">
+
+    <style>
+        .records-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+
+        .records-search {
+            position: relative;
+            flex: 1;
+            min-width: 220px;
+            max-width: 390px;
+        }
+
+        .records-search i {
+            position: absolute;
+            top: 50%;
+            left: 14px;
+            color: #84919d;
+            transform: translateY(-50%);
+        }
+
+        .records-search input {
+            width: 100%;
+            min-height: 43px;
+            padding: 10px 14px 10px 40px;
+            border: 1px solid #e3eaf0;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #20313f;
+            font-size: 12px;
+        }
+
+        .records-search input:focus {
+            border-color: #187c80;
+            outline: 3px solid rgba(24, 124, 128, 0.12);
+        }
+
+        .records-filter {
+            min-height: 43px;
+            padding: 10px 13px;
+            border: 1px solid #e3eaf0;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #20313f;
+            font-size: 12px;
+        }
+
+        .records-summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .records-summary-card {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 17px;
+            border: 1px solid #e3eaf0;
+            border-radius: 12px;
+            background: #ffffff;
+        }
+
+        .records-summary-icon {
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 11px;
+            background: #e5f4f3;
+            color: #187c80;
+            font-size: 18px;
+        }
+
+        .records-summary-card span {
+            display: block;
+            color: #84919d;
+            font-size: 11px;
+        }
+
+        .records-summary-card strong {
+            display: block;
+            margin-top: 4px;
+            color: #20313f;
+            font-size: 23px;
+            font-weight: 750;
+        }
+
+        .records-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .record-card {
+            padding: 20px;
+            border: 1px solid #e3eaf0;
+            border-radius: 13px;
+            background: #ffffff;
+            transition: border-color 0.2s ease;
+        }
+
+        .record-card:hover {
+            border-color: #c5ddda;
+        }
+
+        .record-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .record-card-title {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            min-width: 0;
+        }
+
+        .record-type-icon {
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            width: 43px;
+            height: 43px;
+            border-radius: 11px;
+            background: #eaf2fa;
+            color: #4779b8;
+            font-size: 19px;
+        }
+
+        .record-card-title h2 {
+            margin: 2px 0 6px;
+            color: #20313f;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.45;
+        }
+
+        .record-card-title p {
+            margin: 0;
+            color: #84919d;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .record-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 9px;
+            border-radius: 20px;
+            background: #f0faf6;
+            color: #317b63;
+            font-size: 10px;
+            font-weight: 650;
+            white-space: nowrap;
+        }
+
+        .record-description {
+            margin: 17px 0;
+            color: #637381;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .record-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px 22px;
+            padding-top: 14px;
+            border-top: 1px solid #edf1f5;
+        }
+
+        .record-detail {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: #637381;
+            font-size: 11px;
+        }
+
+        .record-detail i {
+            color: #187c80;
+            font-size: 14px;
+        }
+
+        .record-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 9px;
+            margin-top: 17px;
+        }
+
+        .record-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-height: 36px;
+            padding: 8px 12px;
+            border: 1px solid #e3eaf0;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #4779b8;
+            font-size: 11px;
+            font-weight: 650;
+            cursor: pointer;
+        }
+
+        .record-button:hover {
+            background: #f2f7fc;
+        }
+
+        .record-empty {
+            display: none;
+            padding: 35px 20px;
+            border: 1px dashed #d6e0e8;
+            border-radius: 12px;
+            color: #637381;
+            text-align: center;
+        }
+
+        .record-empty i {
+            display: block;
+            margin-bottom: 12px;
+            color: #84919d;
+            font-size: 28px;
+        }
+
+        .record-empty strong {
+            display: block;
+            margin-bottom: 6px;
+            color: #20313f;
+        }
+
+        @media (max-width: 650px) {
+            .records-summary {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .records-summary-card {
+                padding: 13px;
+            }
+
+            .records-summary-card strong {
+                font-size: 20px;
+            }
+
+            .record-card {
+                padding: 15px;
+            }
+
+            .record-card-header {
+                flex-direction: column;
+            }
+
+            .record-card-title h2 {
+                font-size: 14px;
+            }
+
+            .record-actions {
+                justify-content: flex-start;
+            }
+
+            .records-toolbar {
+                align-items: stretch;
+            }
+
+            .records-search {
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="portal-body">
+
+    <!-- Mobile sidebar overlay -->
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+        aria-hidden="true"
+    ></div>
+
+    <div class="portal-layout">
+
+        <!-- Sidebar -->
+        <aside class="portal-sidebar" id="patientSidebar">
+
+            <a href="../../index.html" class="portal-brand">
+                <span class="portal-brand-icon">
+                    <i class="bi bi-heart-pulse-fill"></i>
+                </span>
+
+                <span class="portal-brand-text">
+                    <span class="portal-brand-name">MedIntelliX</span>
+                    <span class="portal-brand-caption">Patient portal</span>
+                </span>
+            </a>
+
+            <p class="sidebar-section-label">Workspace</p>
+
+            <nav class="sidebar-navigation" aria-label="Patient navigation">
+
+                <a href="dashboard.html" class="sidebar-link">
+                    <i class="bi bi-grid-1x2"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="health-records.html" class="sidebar-link active" aria-current="page">
+                    <i class="bi bi-folder2-open"></i>
+                    <span>Health records</span>
+                </a>
+
+                <a href="medical-reports.html" class="sidebar-link">
+                    <i class="bi bi-file-earmark-medical"></i>
+                    <span>Medical reports</span>
+                </a>
+
+                <a href="medications.html" class="sidebar-link">
+                    <i class="bi bi-capsule"></i>
+                    <span>Medications</span>
+                </a>
+
+                <a href="appointments.html" class="sidebar-link">
+                    <i class="bi bi-calendar2-check"></i>
+                    <span>Appointments</span>
+                </a>
+
+                <a href="doctors.html" class="sidebar-link">
+                    <i class="bi bi-person-vcard"></i>
+                    <span>Doctors</span>
+                </a>
+
+                <a href="health-timeline.html" class="sidebar-link">
+                    <i class="bi bi-clock-history"></i>
+                    <span>Health timeline</span>
+                </a>
+
+                <a href="profile.html" class="sidebar-link">
+                    <i class="bi bi-person-circle"></i>
+                    <span>My profile</span>
+                </a>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+
+                <div class="sidebar-help">
+                    <i class="bi bi-shield-check"></i>
+                    <h6>Your health, your control</h6>
+                    <p>Review how your health information is managed and shared.</p>
+                    <a href="profile.html">View profile settings <i class="bi bi-arrow-right"></i></a>
+                </div>
+
+                <a href="../login.html" class="sidebar-link logout-link" id="logoutLink">
+                    <i class="bi bi-box-arrow-left"></i>
+                    <span>Sign out</span>
+                </a>
+
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <main class="portal-main">
+
+            <!-- Topbar -->
+            <header class="portal-topbar">
+
+                <div class="topbar-left">
+                    <button
+                        type="button"
+                        class="sidebar-toggle"
+                        id="sidebarToggle"
+                        aria-label="Open navigation menu"
+                        aria-controls="patientSidebar"
+                        aria-expanded="false"
+                    >
+                        <i class="bi bi-list"></i>
+                    </button>
+
+                    <div class="breadcrumb-text">
+                        Patient portal <span class="mx-1">/</span>
+                        <strong>Health records</strong>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+
+                    <div class="portal-status">
+                        <span class="status-dot"></span>
+                        Demo environment
+                    </div>
+
+                    <button
+                        type="button"
+                        class="topbar-icon-button"
+                        id="notificationButton"
+                        aria-label="View notifications"
+                    >
+                        <i class="bi bi-bell"></i>
+                        <span class="notification-indicator"></span>
+                    </button>
+
+                    <div class="topbar-profile">
+                        <div class="profile-avatar" id="profileInitials">AM</div>
+
+                        <div class="topbar-profile-info">
+                            <strong id="patientName">Alex Morgan</strong>
+                            <span>Patient account</span>
+                        </div>
+                    </div>
+
+                </div>
+            </header>
+
+            <!-- Page content -->
+            <div class="portal-content">
+
+                <section class="dashboard-welcome">
+                    <div>
+                        <span class="section-eyebrow">Personal health</span>
+                        <h1>Health records</h1>
+                        <p>
+                            Review your medical history, past consultations,
+                            and recorded diagnoses in one place.
+                        </p>
+                    </div>
+                </section>
+
+                <div class="demo-notice" role="note">
+                    <i class="bi bi-info-circle"></i>
+                    <div>
+                        <strong>Demonstration data.</strong>
+                        The records on this page are fictional examples used
+                        to demonstrate the interface. They are not real
+                        medical records and must not be used for medical decisions.
+                    </div>
+                </div>
+
+                <!-- Summary cards -->
+                <section class="records-summary" aria-label="Record summary">
+
+                    <div class="records-summary-card">
+                        <div class="records-summary-icon">
+                            <i class="bi bi-folder2-open"></i>
+                        </div>
+                        <div>
+                            <span>Total records</span>
+                            <strong id="totalRecords">3</strong>
+                        </div>
+                    </div>
+
+                    <div class="records-summary-card">
+                        <div class="records-summary-icon">
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
+                        <div>
+                            <span>Consultations</span>
+                            <strong id="consultationCount">2</strong>
+                        </div>
+                    </div>
+
+                    <div class="records-summary-card">
+                        <div class="records-summary-icon">
+                            <i class="bi bi-hospital"></i>
+                        </div>
+                        <div>
+                            <span>Facilities represented</span>
+                            <strong id="facilityCount">2</strong>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- Search and filter -->
+                <section class="records-toolbar" aria-label="Search health records">
+
+                    <div class="records-search">
+                        <i class="bi bi-search"></i>
+                        <input
+                            type="search"
+                            id="recordSearch"
+                            placeholder="Search records, doctors or facilities..."
+                            aria-label="Search health records"
+                        >
+                    </div>
+
+                    <select
+                        class="records-filter"
+                        id="recordTypeFilter"
+                        aria-label="Filter records by type"
+                    >
+                        <option value="all">All record types</option>
+                        <option value="consultation">Consultations</option>
+                        <option value="diagnosis">Diagnoses</option>
+                        <option value="follow-up">Follow-ups</option>
+                    </select>
+
+                </section>
+
+                <!-- Record list -->
+                <section class="records-list" id="recordsList" aria-label="Medical records">
+
+                    <article
+                        class="record-card"
+                        data-type="consultation"
+                        data-search="general consultation dr ananya sharma city care clinic routine health assessment"
+                    >
+                        <div class="record-card-header">
+                            <div class="record-card-title">
+                                <div class="record-type-icon">
+                                    <i class="bi bi-clipboard2-pulse"></i>
+                                </div>
+
+                                <div>
+                                    <h2>General health consultation</h2>
+                                    <p>Illustrative record · 12 October 2026</p>
+                                </div>
+                            </div>
+
+                            <span class="record-status">
+                                <i class="bi bi-check-circle"></i>
+                                Sample entry
+                            </span>
+                        </div>
+
+                        <p class="record-description">
+                            Example consultation entry showing how a routine
+                            health assessment could appear in the patient portal.
+                            No actual examination or diagnosis is represented.
+                        </p>
+
+                        <div class="record-details">
+                            <span class="record-detail">
+                                <i class="bi bi-person-badge"></i>
+                                Dr. Ananya Sharma
+                            </span>
+
+                            <span class="record-detail">
+                                <i class="bi bi-hospital"></i>
+                                City Care Clinic
+                            </span>
+
+                            <span class="record-detail">
+                                <i class="bi bi-file-earmark-text"></i>
+                                Consultation
+                            </span>
+                        </div>
+
+                        <div class="record-actions">
+                            <button type="button" class="record-button record-view-button">
+                                <i class="bi bi-eye"></i>
+                                View details
+                            </button>
+                        </div>
+                    </article>
+
+                    <article
+                        class="record-card"
+                        data-type="diagnosis"
+                        data-search="sample diagnosis wellness assessment dr rohan mehta central medical centre"
+                    >
+                        <div class="record-card-header">
+                            <div class="record-card-title">
+                                <div class="record-type-icon">
+                                    <i class="bi bi-file-medical"></i>
+                                </div>
+
+                                <div>
+                                    <h2>Example clinical assessment</h2>
+                                    <p>Illustrative record · 28 September 2026</p>
+                                </div>
+                            </div>
+
+                            <span class="record-status">
+                                <i class="bi bi-check-circle"></i>
+                                Sample entry
+                            </span>
+                        </div>
+
+                        <p class="record-description">
+                            Example of a clinical assessment record. A real
+                            entry would contain information supplied and verified
+                            by an authorised healthcare professional.
+                        </p>
+
+                        <div class="record-details">
+                            <span class="record-detail">
+                                <i class="bi bi-person-badge"></i>
+                                Dr. Rohan Mehta
+                            </span>
+
+                            <span class="record-detail">
+                                <i class="bi bi-hospital"></i>
+                                Central Medical Centre
+                            </span>
+
+                            <span class="record-detail">
+                                <i class="bi bi-file-earmark-medical"></i>
+                                Assessment
+                            </span>
+                        </div>
+
+                        <div class="record-actions">
+                            <button type="button" class="record-button record-view-button">
+                                <i class="bi bi-eye"></i>
+                                View details
+                            </button>
+                        </div>
+                    </article>
+
+                    <article
+                        class="record-card"
+                        data-type="follow-up"
+                        data-search="follow-up care plan dr ananya sharma city care clinic sample"
+                    >
+                        <div class="record-card-header">
+                            <div class="record-card-title">
+                                <div class="record-type-icon">
+                                    <i class="bi bi-calendar2-check"></i>
+                                </div>
+
+                                <div>
+                                    <h2>Example follow-up entry</h2>
+                                    <p>Illustrative record · 15 September 2026</p>
+                                </div>
+                            </div>
+
+                            <span class="record-status">
+                                <i class="bi bi-check-circle"></i>
+                                Sample entry
+                            </span>
+                        </div>
+
+                        <p class="record-description">
+                            Example follow-up entry demonstrating how subsequent
+                            visits can be connected to a patient's health history.
+                        </p>
+
+                        <div class="record-details">
+                            <span class="record-detail">
+                                <i class="bi bi-person-badge"></i>
+                                Dr. Ananya Sharma
+                            </span>
+
+                            <span class="record-detail">
+                                <i class="bi bi-hospital"></i>
+                                City Care Clinic
+                            </span>
+
+                            <span class="record-detail">
+                                <i class="bi bi-clock-history"></i>
+                                Follow-up
+                            </span>
+                        </div>
+
+                        <div class="record-actions">
+                            <button type="button" class="record-button record-view-button">
+                                <i class="bi bi-eye"></i>
+                                View details
+                            </button>
+                        </div>
+                    </article>
+
+                </section>
+
+                <div class="record-empty" id="recordEmpty" role="status">
+                    <i class="bi bi-search"></i>
+                    <strong>No matching records</strong>
+                    <span>Try a different search term or record type.</span>
+                </div>
+
+                <footer class="portal-footer">
+                    <span>
+                        © <span id="recordsYear"></span> MedIntelliX.
+                        Patient health, handled responsibly.
+                    </span>
+
+                    <span>Prototype interface · Sample data only</span>
+                </footer>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Record details modal -->
+    <div
+        class="modal fade"
+        id="recordDetailsModal"
+        tabindex="-1"
+        aria-labelledby="recordModalTitle"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4">
+
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5" id="recordModalTitle">
+                        Record details
+                    </h2>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+
+                <div class="modal-body" id="recordModalBody">
+                    <p class="text-secondary mb-0">
+                        This is a fictional demonstration record.
+                    </p>
+                </div>
+
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Close
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/common.js"></script>
+    <script src="../../js/patient/health-records.js"></script>
+
+</body>
+</html>
