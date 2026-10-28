@@ -3,7 +3,10 @@
   "builds": [
     {
       "src": "backend/src/server.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": "{index.html,pages/**,css/**,js/**}"
+      }
     }
   ],
   "routes": [
@@ -11,10 +14,5 @@
       "src": "/(.*)",
       "dest": "/backend/src/server.js"
     }
-  ],
-  "functions": {
-    "backend/src/server.js": {
-      "includeFiles": "{index.html,pages/**,css/**,js/**}"
-    }
-  }
+  ]
 }
