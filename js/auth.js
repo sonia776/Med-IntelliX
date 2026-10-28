@@ -4,7 +4,7 @@
    ======================================== */
 
 document.addEventListener("DOMContentLoaded", function () {
-    const API_BASE = "http://localhost:3000/api";
+    const API_BASE = "/api";
 
     // Get HTML elements
     const loginForm = document.getElementById("loginForm");
@@ -181,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.error("Login request error:", err);
                 showMessage(
                     err.message.includes("Failed to fetch")
-                        ? "Unable to reach the MedIntelliX authentication server (http://localhost:3000). Please ensure the backend is running."
+                        ? "Unable to reach the MedIntelliX authentication server. Please try again later."
                         : err.message,
                     "error"
                 );

@@ -207,7 +207,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "MIX-" + Date.now().toString(36).toUpperCase();
 
             const response = await fetch(
-                "http://localhost:3000/api/hospital/patients",
+                "/api/hospital/patients",
                 {
                     method: "POST",
                     headers: {

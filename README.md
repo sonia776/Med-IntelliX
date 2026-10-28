@@ -63,6 +63,9 @@ npm run db:init
 
 The API server will be live at `http://localhost:3000`.
 
+### Deploy to Vercel
+Import the repository into Vercel and set the project root to the repository root (not `backend/`). The included `vercel.json` serves the website and API from one deployment. Configure production database and `JWT_SECRET` environment variables in Vercel before using real accounts or patient data.
+
 ---
 
 ## 🧪 Running Tests

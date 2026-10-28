@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     async function loadPatientsFromAPI() {
         try {
             const response = await fetch(
-                "http://localhost:3000/api/hospital/patients"
+                "/api/hospital/patients"
             );
 
             if (!response.ok) {

@@ -4,7 +4,7 @@
    ======================================== */
 
 document.addEventListener("DOMContentLoaded", function () {
-    const API_BASE = "http://localhost:3000/api";
+    const API_BASE = "/api";
 
     // Get HTML elements
     const registerForm = document.getElementById("registerForm");
@@ -282,7 +282,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.error("Registration error:", err);
                 showMessage(
                     err.message.includes("Failed to fetch")
-                        ? "Unable to connect to the MedIntelliX backend server. Ensure http://localhost:3000 is running."
+                        ? "Unable to connect to the MedIntelliX backend server. Please try again later."
                         : err.message,
                     "error"
                 );

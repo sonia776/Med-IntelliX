@@ -77,7 +77,7 @@ async function initializeDashboardStatistics() {
     updateStatistic("appointmentsCount", 1);
 
     try {
-        const response = await fetch("http://localhost:3000/api/patients/count");
+        const response = await fetch("/api/patients/count");
         if (!response.ok) throw new Error("Unable to fetch patient count.");
 
         const data = await response.json();

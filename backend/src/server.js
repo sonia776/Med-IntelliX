@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
+const path = require("path");
 require("dotenv").config();
 
 const pool = require("./config/database");
@@ -12,6 +13,17 @@ const errorHandler = require("./middleware/error-handler");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const projectRoot = path.resolve(__dirname, "../..");
+
+// Serve the frontend from the same origin as the API without exposing backend files.
+app.get("/", (req, res, next) => {
+    res.sendFile(path.join(projectRoot, "index.html"), (error) => {
+        if (error) next(error);
+    });
+});
+app.use("/css", express.static(path.join(projectRoot, "css")));
+app.use("/js", express.static(path.join(projectRoot, "js")));
+app.use("/pages", express.static(path.join(projectRoot, "pages")));
 
 // Security Middlewares
 app.use(helmet());
@@ -100,7 +112,7 @@ app.use((req, res) => {
 
 app.use(errorHandler);
 
-if (process.env.NODE_ENV !== "test") {
+if (process.env.NODE_ENV !== "test" && !process.env.VERCEL) {
     app.listen(PORT, () => {
         console.log(`MedIntelliX API server running at http://localhost:${PORT}`);
     });

@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     async function loadConsultationsFromAPI() {
         try {
             const response = await fetch(
-                "http://localhost:3000/api/hospital/consultations"
+                "/api/hospital/consultations"
             );
 
             if (!response.ok) {
@@ -443,7 +443,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
             const response = await fetch(
-                `http://localhost:3000/api/hospital/consultations/${encodeURIComponent(item.id)}/status`,
+                `/api/hospital/consultations/${encodeURIComponent(item.id)}/status`,
                 {
                     method: "PATCH",
                     headers: {

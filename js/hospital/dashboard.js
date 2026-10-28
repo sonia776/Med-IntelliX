@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Fetch live counts from backend if available
-    fetch("http://localhost:3000/api/hospital/stats")
+    fetch("/api/hospital/stats")
         .then(res => res.json())
         .then(data => {
             if (data.success && data.stats) {

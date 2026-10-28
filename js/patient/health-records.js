@@ -30,7 +30,7 @@ async function loadRecords() {
 
     try {
         const response = await fetch(
-            "http://localhost:3000/api/patients/DEMO-001/records"
+            "/api/patients/DEMO-001/records"
         );
 
         if (!response.ok) {
