@@ -14,12 +14,7 @@
   ],
   "functions": {
     "backend/src/server.js": {
-      "includeFiles": [
-        "index.html",
-        "pages/**",
-        "css/**",
-        "js/**"
-      ]
+      "includeFiles": "{index.html,pages/**,css/**,js/**}"
     }
   }
 }
